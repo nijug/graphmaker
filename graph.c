@@ -41,6 +41,7 @@ void generate(int x, int y, double rand1, double rand2)
     {
         for (int j = 0; j < y; j++)
         {
+            graph[i * y + j]=NULL;
             if(j+1!=y)
                 graph[i * y + j] = add(graph[i * y + j], i * y + j+1, rand_d(rand1, rand2));
             if(j!=0)

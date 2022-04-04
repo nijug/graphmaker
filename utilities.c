@@ -9,6 +9,21 @@ int rand_bool()
 
  double rand_d(double a, double b)
  {
-     double temp = (double)rand()/RAND_MAX;
+     double temp = (double)random()/RAND_MAX;
      return a+(b-a)*temp;
  }
+
+int isINT(char number[])
+{
+
+    if (number[0] == '-')
+        return 0;
+    if (number[0] == '0')
+        return 0;
+    for (int i = 0; number[i] != '\0'; i++)
+    {
+        if (!isdigit(number[i]))
+            return 0;
+    }
+    return 1;
+}
