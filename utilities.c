@@ -13,13 +13,16 @@ int rand_bool()
      return a+(b-a)*temp;
  }
 
-int isINT(char number[])
+int isINT(char number[], int zero) // int po to żeby wywalić warunek że nie może być zerem - tylko dla sprawdzania k
 {
 
     if (number[0] == '-')
         return 0;
-    if (number[0] == '0')
-        return 0;
+    if(zero==0)
+    {
+        if (number[0] == '0')
+            return 0;
+    }
     for (int i = 0; number[i] != '\0'; i++)
     {
         if (!isdigit(number[i]))

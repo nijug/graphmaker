@@ -5,9 +5,8 @@
 int main(int argc, char** argv)
 {
     srandom(time(NULL));
-    int mode; // 0 dla generowania, 1 dla analizy
     int opt;
-    char *fname=NULL;
+    char *fname="graf.txt";
     int x = 3;
     int y = 3;
     int n = 1;
@@ -16,13 +15,15 @@ int main(int argc, char** argv)
     int k[256] = {1,25};
     int i =0;
 
-    while ((opt = getopt (argc, argv, "f:x:y:n:r:k:")) != -1) {
-        switch (opt) {
+    while ((opt = getopt (argc, argv, "f:x:y:n:r:k:")) != -1)
+    {
+        switch (opt)
+        {
             case 'f':
                 fname = optarg;
                 break;
             case 'x':
-                if(isINT(optarg)==0)
+                if(isINT(optarg,0)==0)
                 {
                     fprintf (stderr,"Argumenty x i y nie są liczbami całkowitymi większymi od zera!\n");
                     exit (EXIT_FAILURE);
@@ -31,7 +32,7 @@ int main(int argc, char** argv)
                     x= atoi(optarg);
                 break;
             case 'y':
-                if(isINT(optarg)==0)
+                if(isINT(optarg,0)==0)
                 {
                     fprintf (stderr,"Argumenty x i y nie są liczbami całkowitymi większymi od zera!\n");
                     exit (EXIT_FAILURE);
@@ -40,7 +41,7 @@ int main(int argc, char** argv)
                     y = atoi(optarg);
                 break;
             case 'n':
-                if(isINT(optarg)==0)
+                if(isINT(optarg,0)==0)
                 {
                     fprintf (stderr,"Argument n powinien być liczba całkowita większą od zera!\n");
                     exit (EXIT_FAILURE);
@@ -64,18 +65,39 @@ int main(int argc, char** argv)
                 break;
             case 'k':
                 optind--;
-                for( ;optind< argc && *argv[optind] != '-'; optind++) {
+                for( ;optind< argc ; optind++)
+                {
+                    if(isalpha(*(argv[optind]+1)) && *argv[optind] == '-' )
+                        break;
+                    if(isINT(argv[optind],1)==0)
+                    {
+                        fprintf (stderr,"Numery wezlow powinny być liczbami calkowitymi, nieujemnymi\n");
+                        exit (EXIT_FAILURE);
+                    }
+
                     k[i++]= atoi(argv[optind]);
+
                 }
-            }
+        }
     }
-    generate(x, y, 1.0 ,2.0);
-    write(fname,x,y);
+   /* if( access( fname, F_OK ) == 0 )
+    {
+        read(fname,&x,&y);
+
+    }
+   else
+    {
+   */     generate(x, y, r1 ,r2);
+        write_graph(fname,x,y);
+   // }
+
+
 
     graphfree(x,y);
 
-   printf("f:%s x:%d y:%d n:%d r1=%f r2=%f\n", fname, x,y,n,r1,r2);
- for (int j = 0; j<i; j++)
+    printf("f:%s x:%d y:%d n:%d r1=%f r2=%f\n", fname, x,y,n,r1,r2);
+
+    for (int j = 0; j<i; j++)
     {
         printf("k:");
         printf(" %d",k[j]);
