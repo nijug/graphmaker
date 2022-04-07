@@ -57,7 +57,6 @@ void generate(int x, int y, double rand1, double rand2)
 
 void graphfree(int x, int y)
 {
-
     for (int i = 0; i < x * y; i++)
     {
         node* tmp;
@@ -90,7 +89,6 @@ void Twrite_graph (int x, int y) // tylko debuggowania, wypisuje na terminal w c
         }
     }
 }
-
 void write_graph (char* fname, int x, int y)
 {
     FILE *in= fopen(fname,"w+");
@@ -114,24 +112,54 @@ void write_graph (char* fname, int x, int y)
         }
     }
 }
-
-void read_graph  (char *fname, int *x, int *y)
+void read_graph(char *fname, int *x, int *y)
 {
+
     FILE *in= fopen(fname,"a+");
     if (in == NULL)
     {
-        fprintf (stderr,"Błąd w odczytywaniu pliku\n");
+        fprintf (stderr,"Błąd w otworzeniu pliku\n");
         exit (EXIT_FAILURE);
     }
-    int read=fscanf(in,"%d %d",x, y);
+    int points[4];
+    double values[4];
+    char line[256];
+    char *tokens;
+    if(fgets(line,256, in)==NULL)
+    {
+        fprintf (stderr,"Błąd podczas odczytywania pliku\n");
+        exit (EXIT_FAILURE);
+    };
+
+    int read=sscanf(line,"%d %d",x, y);
     if (read == EOF || read != 2 )
     {
         fprintf (stderr,"Nieprawidłowy format pliku\n");
         exit (EXIT_FAILURE);
     }
     graph = malloc(sizeof(node*) * *x * *y);
+
     for (int i = 0; i<*x * *y ; i++)
     {
+        if(fgets(line,256, in)==NULL)
+        {
+            fprintf (stderr,"Błąd podczas odczytywania pliku\n");
+            exit (EXIT_FAILURE);
+        };
 
+
+        read = sscanf(line, "%d %lf %d %lf %d %lf %d %lf ",&points[0], &values[0],&points[1], &values[1],&points[2], &values[2],&points[3], &values[3]);
+
+      if (read/2>0)
+      {
+          for (int j = 0; j < read / 2; j++) {
+              graph[i] = add(graph[i], points[j], values[j]);
+          }
+      }
+      else
+      {
+          fprintf (stderr,"Błąd podczas odczytywania pliku\n");
+          exit (EXIT_FAILURE);
+      }
     }
 }

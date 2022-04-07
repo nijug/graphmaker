@@ -7,6 +7,7 @@
 *.so
 *.out
 *.gch
+*.txt
 
 *.7z
 *.dmg

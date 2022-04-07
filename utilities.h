@@ -4,6 +4,7 @@
 #include <getopt.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 
 int rand_bool();
 double rand_d(double a, double b);

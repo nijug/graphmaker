@@ -80,16 +80,18 @@ int main(int argc, char** argv)
                 }
         }
     }
-   /* if( access( fname, F_OK ) == 0 )
+    if( access( fname, F_OK ) == 0 )
     {
-        read(fname,&x,&y);
-
+        printf("czytanie\n");
+        read_graph(fname,&x,&y);
+        Twrite_graph(x,y);
     }
    else
     {
-   */     generate(x, y, r1 ,r2);
-        write_graph(fname,x,y);
-   // }
+        printf("generowanie\n");
+       generate(x, y, r1 ,r2);
+       write_graph(fname,x,y);
+   }
 
 
 
