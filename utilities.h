@@ -8,4 +8,5 @@
 
 int rand_bool();
 double rand_d(double a, double b);
-int isINT(char number[], int zero);
+int is_int(char number[], int zero);
+int max_mem();

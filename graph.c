@@ -89,29 +89,32 @@ void Twrite_graph (int x, int y) // tylko debuggowania, wypisuje na terminal w c
         }
     }
 }
-void write_graph (char* fname, int x, int y)
+void write_graph (char* fname, int x, int y, int n) // n decyduje czy graf posiada krawędzie - jeśli nie (0) zapisujemy tylko rozmiary
 {
     FILE *in= fopen(fname,"w+");
     if (in == NULL)
     {
         fprintf (stderr,"Błąd w zapisywaniu do pliku\n");
+        fclose(in);
         exit (EXIT_FAILURE);
     }
     fprintf(in,"%d %d\n",x,y);
-    for (int i = 0; i < x; i++)
+    if (n==1)
     {
-        for (int j = 0; j < y; j++)
-        {
-            node *tmp = graph[i * y + j];
-            while (tmp != NULL)
-            {
-                fprintf(in,"%d %f ", tmp->point, tmp->value);
-                tmp = tmp->next;
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                node *tmp = graph[i * y + j];
+                while (tmp != NULL) {
+                    fprintf(in, "%d %f ", tmp->point, tmp->value);
+                    tmp = tmp->next;
+                }
+                fprintf(in, "\n");
             }
-            fprintf(in,"\n");
         }
     }
+    fclose(in);
 }
+
 void read_graph(char *fname, int *x, int *y)
 {
 
@@ -119,6 +122,7 @@ void read_graph(char *fname, int *x, int *y)
     if (in == NULL)
     {
         fprintf (stderr,"Błąd w otworzeniu pliku\n");
+        fclose(in);
         exit (EXIT_FAILURE);
     }
     int points[4];
@@ -128,6 +132,7 @@ void read_graph(char *fname, int *x, int *y)
     if(fgets(line,256, in)==NULL)
     {
         fprintf (stderr,"Błąd podczas odczytywania pliku\n");
+        fclose(in);
         exit (EXIT_FAILURE);
     };
 
@@ -135,6 +140,7 @@ void read_graph(char *fname, int *x, int *y)
     if (read == EOF || read != 2 )
     {
         fprintf (stderr,"Nieprawidłowy format pliku\n");
+        fclose(in);
         exit (EXIT_FAILURE);
     }
     graph = malloc(sizeof(node*) * *x * *y);
@@ -143,8 +149,9 @@ void read_graph(char *fname, int *x, int *y)
     {
         if(fgets(line,256, in)==NULL)
         {
-            fprintf (stderr,"Błąd podczas odczytywania pliku\n");
-            exit (EXIT_FAILURE);
+            fprintf (stdout,"Graf nie posiada krawędzi, nie można wyznaczyć ścieżki\n");
+            fclose(in);
+            exit (EXIT_SUCCESS);
         };
 
 
@@ -159,7 +166,9 @@ void read_graph(char *fname, int *x, int *y)
       else
       {
           fprintf (stderr,"Błąd podczas odczytywania pliku\n");
+          fclose(in);
           exit (EXIT_FAILURE);
       }
     }
+    fclose(in);
 }

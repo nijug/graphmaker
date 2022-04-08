@@ -13,7 +13,7 @@ int rand_bool()
      return a+(b-a)*temp;
  }
 
-int isINT(char number[], int zero) // int po to żeby wywalić warunek że nie może być zerem - tylko dla sprawdzania k
+int is_int(char number[], int zero) // int po to żeby wywalić warunek że nie może być zerem - tylko dla sprawdzania k
 {
 
     if (number[0] == '-')
@@ -29,4 +29,9 @@ int isINT(char number[], int zero) // int po to żeby wywalić warunek że nie m
             return 0;
     }
     return 1;
+}
+
+int max_mem()
+{
+     return (sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGESIZE) *0.3)/104;
 }
