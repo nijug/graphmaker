@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "bfs.h"
 #include "utilities.h"
 
 // narazie dałem standardowe mniejsze niż w funkcjonalnej żeby było łatwiej debuggować, potem do zmiany
@@ -7,8 +8,8 @@ int main(int argc, char** argv)
     srandom(time(NULL));
     int opt;
     char *fname="graf.txt";
-    int x = 3000;
-    int y = 10000;
+    int x = 4;
+    int y = 4;
     int n = 1;
     double r1=0.0;
     double r2=1.0;
@@ -113,6 +114,7 @@ int main(int argc, char** argv)
 
         read_graph(fname,&x,&y);
         // tutaj wywołanie ścieżek grafu i zapisania ścieżki do pliku
+        printf("Wynik bfska: %d\n", bfs(13, 14, 4, 4));
         graphfree(x,y);
     }
    else
@@ -143,6 +145,7 @@ int main(int argc, char** argv)
 
     printf("\n");
 do testowania */
+
 
     fprintf (stdout,"Program zakończono pomyślnie\n");
     exit (EXIT_SUCCESS);

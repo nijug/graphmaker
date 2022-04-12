@@ -2,8 +2,11 @@
 
 typedef struct e
 {
+    // waga krawędzi
     double value;
+    // numer sąsiedniego węzła
     int point;
+    // wskaźnik na następny
     struct e *next;
 } node;
 

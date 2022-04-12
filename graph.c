@@ -12,6 +12,7 @@ double find_value(node *l, int point)
 
 node* add(node *l, int point, double value)
 {
+    // dla pierwszego węzła
     if (l == NULL)
     {
         node *nw = malloc(sizeof(node));
@@ -20,6 +21,7 @@ node* add(node *l, int point, double value)
         nw->next = NULL;
         return nw;
     }
+    // dla kolejnych węzłów
     else
     {
         node *tmp = l;
@@ -33,7 +35,7 @@ node* add(node *l, int point, double value)
     }
 }
 
-
+// generator grafu
 void generate(int x, int y, double rand1, double rand2)
 {
    graph = malloc(sizeof(node*) * x * y);
@@ -42,7 +44,8 @@ void generate(int x, int y, double rand1, double rand2)
         for (int j = 0; j < y; j++)
         {
             graph[i * y + j]=NULL;
-            if(i!=0) // górny
+            // tworzenie krawędzi prowadzących do sąsiadujących węzłów
+            if(i!=0) // górny, dzięki temu warunkowi find_value szuka wartości tylko jeśli sąsiadujący węzeł już istnieje
                 graph[i * y + j]=add(graph[i * y + j], (i-1) * y + j,find_value(graph[(i-1) * y + j],i * y + j));
             if(j+1!=y) // lewy
                 graph[i * y + j] = add(graph[i * y + j], i * y + j+1, rand_d(rand1, rand2));
