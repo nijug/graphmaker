@@ -4,15 +4,15 @@
 typedef struct box_2
 {
     int number;
-    double priority;
+    double length;
     struct box_2* next;
 } box_2;
 
 
-void dijkstra(int a, int b, int x, int y);
-box_2* new_box_2(int number, double priority);
+int dijkstra(int a, int b, int x, int y);
+box_2* new_box_2(int number, double length);
 int peek(box_2** head);
 void pop(box_2** head);
-void push(box_2** head, int number, double priority);
+void push(box_2** head, int number, double length);
 int is_empty(box_2** head);
 

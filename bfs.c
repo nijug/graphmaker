@@ -16,6 +16,7 @@ void enqueue_curr(int number);
 void dequeue_curr();
 int in_queue_curr(int number);
 void clear_queue();
+void clear_queue_curr();
 
 // dla roznych a i b zwraca 1 istnieje sciezka miedzy nimi albo 0 jesli nie istnieje
 // dla tych samych a i b zwraca 1 jesli caly graf jest spojny oraz 0 jesli jest nie spojny
@@ -68,12 +69,23 @@ int bfs(int a, int b, int x, int y){
         {
             if(a == b)
             {
-                if(queue_size() == (x*y)) return 1;
-                else return 0;
+                if(queue_size() == (x*y)) 
+                {
+                    clear_queue_curr();
+                    clear_queue();
+                    return 1;
+                }
+                else 
+                {
+                    clear_queue_curr();
+                    clear_queue();
+                    return 0;
+                }
             }
             else
             {
                 queue_size();
+                clear_queue_curr();
                 clear_queue();
                 return found;
             }
@@ -82,7 +94,8 @@ int bfs(int a, int b, int x, int y){
         curr = (first_2->nb);
 
     }
-
+                    
+    clear_queue_curr();
     clear_queue();
     return 1;
 }
@@ -195,4 +208,14 @@ void clear_queue(){
     while(first!=NULL){
         dequeue();
     }
+    first = NULL;
+    last = NULL;
+}
+
+void clear_queue_curr(){
+    while(first_2!=NULL){
+        dequeue_curr();
+    }
+    first_2 = NULL;
+    last_2 = NULL;
 }
