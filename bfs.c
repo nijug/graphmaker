@@ -1,7 +1,6 @@
+#include <stdio.h>
 #include "graph.h"
 #include "bfs.h"
-#include "stdio.h"
-
 
 struct box *first = NULL;
 struct box *last = NULL;
@@ -65,39 +64,47 @@ int bfs(int a, int b, int x, int y){
         enqueue(curr);
         // usuniecie obecnego wezla z kolejki do rozpatrzenia
         dequeue_curr(curr);
+
+        // gdy kolejka do rozpotrzenia jest pusta (wszystkie dostepne wezly zostaly rozpatrzone)
         if(first_2 == NULL)
         {
+            // sytuacja, gdy sprawdzamy spojnosc calego grafu
             if(a == b)
             {
                 if(queue_size() == (x*y)) 
                 {
                     clear_queue_curr();
                     clear_queue();
-                    return 1;
+                    printf("Graf jest spojny.\n");
+                    return 2;
                 }
                 else 
                 {
                     clear_queue_curr();
-                    clear_queue();
-                    return 0;
+                    clear_queue();  
+                    printf("Graf nie jest spojny.\n");
+                    return 3;
                 }
             }
+            // sytuacja, gdy sprawdzamy tylko czy istnieje sciezka miedzy dwoma konkretnymi wezlami
             else
             {
-                queue_size();
-                clear_queue_curr();
-                clear_queue();
+                if(found == 0)
+                {
+                    clear_queue_curr();
+                    clear_queue();  
+                    printf("Sciezka miedzy wybranymi wezlami nie istnieje!\n");
+                }
                 return found;
             }
         }
-        // zamiana obecnego wezla na pierwszy wezel w kolejce do rozpatrzenia
+
+        // zamiana numeru obecnego wezla na numer pierwszego wezla w kolejce do rozpatrzenia
         curr = (first_2->nb);
 
     }
-                    
-    clear_queue_curr();
-    clear_queue();
-    return 1;
+    //*//                
+    //return 1;
 }
 
 ///////////////////////////// METODY /////////////////////////////
@@ -204,6 +211,7 @@ int in_queue_curr(int number){
     return 0;    
 }
 
+// metoda do czyszczaca pamiec i resetujaca kolejke
 void clear_queue(){
     while(first!=NULL){
         dequeue();
@@ -212,6 +220,7 @@ void clear_queue(){
     last = NULL;
 }
 
+// metoda czyszczaca pamiec i resetujaca kolejke
 void clear_queue_curr(){
     while(first_2!=NULL){
         dequeue_curr();

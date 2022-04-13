@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "type_traits": "c",
+        "dijkstra.h": "c",
+        "stdlib.h": "c"
     }
 }
