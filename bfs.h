@@ -5,6 +5,7 @@ struct box
     // wskaznik na nastepny wezel
     struct box *next;
 };
+
 void enqueue(int number);
 void dequeue();
 int in_queue(int number);

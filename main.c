@@ -1,10 +1,13 @@
 #include "graph.h"
 #include "bfs.h"
+#include "dijkstra.h"
 #include "utilities.h"
 
 // narazie dałem standardowe mniejsze niż w funkcjonalnej żeby było łatwiej debuggować, potem do zmiany
 int main(int argc, char** argv)
 {
+    //dijkstra(1, 1, 1, 1);
+    
     srandom(time(NULL));
     int opt;
     char *fname="graf.txt";
@@ -114,7 +117,7 @@ int main(int argc, char** argv)
 
         read_graph(fname,&x,&y);
         // tutaj wywołanie ścieżek grafu i zapisania ścieżki do pliku
-        printf("Wynik bfska: %d\n", bfs(13, 14, 4, 4));
+        printf("Wynik bfsa: %d\n", bfs(0, 0, 4, 4));
         graphfree(x,y);
     }
    else
@@ -144,9 +147,9 @@ int main(int argc, char** argv)
     }
 
     printf("\n");
-do testowania */
+do testowania 
 
-
+*/
     fprintf (stdout,"Program zakończono pomyślnie\n");
     exit (EXIT_SUCCESS);
 
