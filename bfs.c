@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include "graph.h"
 #include "bfs.h"
 
 struct box *first = NULL;

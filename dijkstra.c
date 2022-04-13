@@ -1,44 +1,32 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "graph.h"
 #include "dijkstra.h"
-#include "bfs.h"
 
 struct box_2 *first_l = NULL;
 struct box_2 *first_l_2 = NULL;
 
-box_2 *new_box(int number, double length);
-int peek();
-void pop();
-box_2 *push(int number, double length);
-void clear();
-box_2 *is_listed(int nb);
-
 double dijkstra(int s, int b, int x, int y){
     int size, result = bfs(s, b, x, y);
+    
     switch (result)
     {
-    case 0:
-        return 0;
-        break;
+        case 0:
+            return 0;
+            break;
 
-    case 1:
-        size = queue_size();
-        clear_queue_curr();
-        clear_queue();        
-        break;
+        case 1:
+            size = queue_size();
+            clear_queue_curr();
+            clear_queue();        
+            break;
 
-    case 2:
-        return 2;
-        break;
+        case 2:
+            return 2;
+            break;
 
-    case 3:
-        return 3;
-        break;
-    
-    default:
-        break;
-    }    
+        case 3:
+            return 3;
+            break;
+    } 
+
     double dist;
     int curr = s, i, j, k;
     box_2 *crafted = NULL;
@@ -46,13 +34,15 @@ double dijkstra(int s, int b, int x, int y){
     box_2 *ptr = first_l;
     first_l_2 = first_l;
     node *tmp;
+
+    // petla powtarza sie tyle razy ile wezlow bfs znalazl w grafie
     for(k = 0; k < size; k++){
         i = curr / x;
         j = curr % y;
         tmp = graph[curr];
         if(tmp != NULL){
 
-            if(i != 0){ // gorny - rozpatrywanie krawedzi idacej w dol
+            if(i != 0){ // gorny - rozpatrywanie krawedzi idacej w gore
                 if(tmp->value != -1.0)
                 {
                     crafted = is_listed(tmp->point);
@@ -74,7 +64,7 @@ double dijkstra(int s, int b, int x, int y){
                 tmp = tmp->next;
             }
 
-            if(j+1 != y){ // lewy
+            if(j+1 != y){ // prawy - rozpatrywanie krawedzi idacej w prawo
                 if(tmp->value != -1.0)
                 {
                     crafted = is_listed(tmp->point);
@@ -95,7 +85,7 @@ double dijkstra(int s, int b, int x, int y){
                 tmp = tmp->next;
             }
 
-            if(j != 0){ // prawy
+            if(j != 0){ // lewy - rozpatrywanie krawedzi idacej w prawo
                 if(tmp->value != -1.0)
                 {
                     crafted = is_listed(tmp->point);
@@ -116,7 +106,7 @@ double dijkstra(int s, int b, int x, int y){
                 tmp = tmp->next;
             }
 
-            if(i+1 != x){ //dolny
+            if(i+1 != x){ // dolny - rozpatrywanie krawedzi idacej w dol
                 if(tmp->value != -1.0)
                 {
                     crafted = is_listed(tmp->point);
@@ -140,10 +130,12 @@ double dijkstra(int s, int b, int x, int y){
         
         pop(ptr);
         ptr = first_l;
-        // zamiana obecnego wezla na pierwszy wezel w kolejce do rozpatrzenia
+
+        // zamiana numeru obecnego wezla na numer pierwszego wezla w kolejce do rozpatrzenia (priorytetowej)
         curr = (ptr->number);
 
     }
+
     dist = is_listed(b)->length;
     printf("Najkrotsza sciezka miedzy punktami \"%d\" i \"%d\" ma dlugosc: %lf\n", s, b, dist);
     return dist;
@@ -167,10 +159,6 @@ box_2 *is_listed(int nb)
     return 0;
 }
 
-
-
-
-
 // metoda do tworzenia nowego elementu kolejki
 box_2* new_box(int number, double length)
 {
@@ -183,12 +171,7 @@ box_2* new_box(int number, double length)
     return tmp;
 }
 
-// metoda zwracajaca wartosc glowy
-int peek()
-{
-    return first_l->number;
-}
-
+// metoda calkowicie oczyszczajaca pamiec po elemencie
 void clear()
 {
     box_2* tmp = first_l;
@@ -196,7 +179,8 @@ void clear()
     free(tmp);
 }
 
-// metoda usuwajaca element z najwyzszym priorytetem, czyli najmniejsza odlegloscia od zrodla
+// metoda pomijajaca element z najwyzszym priorytetem, czyli najmniejsza odlegloscia od zrodla
+// element zostaje w drugiej liscie, aby utworzyc liste elementow juz rozpatrzonych
 void pop()
 {
     box_2* tmp = first_l;
@@ -211,6 +195,8 @@ box_2 *push(int number, double length)
     box_2* tmp = new_box(number, length);
     tmp->next = NULL;
     tmp->prev = NULL;
+
+    // przypadek dla dodawania pierwszego elementu
     if(first_l == NULL)
     {
         first_l = tmp;    
@@ -218,7 +204,7 @@ box_2 *push(int number, double length)
     }
     else
     {
-        // jesli glowa ma mniejszy priorytet niz nowy element
+        // jesli glowa ma mniejszy priorytet niz nowy element (jest dalej od zrodla)
         if (first_l->length > length)
         {
             tmp->next = first_l;
@@ -226,6 +212,7 @@ box_2 *push(int number, double length)
         }
         else
         {
+            // przeszukiwanie listy do momentu znalezienia odpowiedniego miejsca dla nowego elementu
             while (start->next != NULL && start->next->length < length) {
                 start = start->next;
             }
@@ -236,21 +223,3 @@ box_2 *push(int number, double length)
     return tmp;
      
 }
-
-/*
-void initialize_length(){
-    int i, size = queue_size()-1;
-    box_2* tmp = first_l;
-    tmp->number = ->nb;
-    tmp->length = 0;
-    tmp->prev = tmp;
-    push(tmp->number, tmp->length);
-    for(i = 0; i < size; i++)
-    {
-        tmp->next = push(tmp_old->nb, -1);
-        tmp = tmp->next;
-    }
-    clear_queue_curr();
-    clear_queue();
-}
-*/

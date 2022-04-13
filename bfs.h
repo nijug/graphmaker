@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include "graph.h"
+
 struct box
 {
     // numer wezla
