@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "graph.h"
+#include "bfs.h"
 #include "dijkstra.h"
 
 struct box_2 *first_l = NULL;
@@ -35,7 +39,7 @@ double dijkstra(int s, int b, int x, int y){
     first_l_2 = first_l;
     node *tmp;
 
-    // petla powtarza sie tyle razy ile wezlow bfs znalazl w grafie
+    // petla powtarza sie tyle razy ile wezlow bfs znalazl w tej czesci grafu
     for(k = 0; k < size; k++){
         i = curr / x;
         j = curr % y;
@@ -45,9 +49,14 @@ double dijkstra(int s, int b, int x, int y){
             if(i != 0){ // gorny - rozpatrywanie krawedzi idacej w gore
                 if(tmp->value != -1.0)
                 {
+                    // sprawdzenie czy wskazywany wezel jest juz w liscie wezlow 
+                    // (tej zawierajacej wezly rozpatrzone i nie)
                     crafted = is_listed(tmp->point);
+                    // przypadek gdy wskazywany wezel juz znajduje sie w liscie
                     if(crafted != NULL)
                     {
+                        // jesli droga do wskazywanego wezla jest dluzsza od obecnie rozpatrywanej drogi
+                        // to nastepuje zamiana wartosci jej dlugosci oraz poprzednika wskazywanego wezla
                         if (crafted->length > (ptr->length + tmp->value))
                         {
                             crafted->length = ptr->length + tmp->value;
@@ -56,6 +65,9 @@ double dijkstra(int s, int b, int x, int y){
                     }
                     else
                     {
+                        // jesli wskazywany wezel nie byl wczesniej dodany do listy, 
+                        // to zostaje on dodany, i jako poprzednika w najkrotszej drodze od zrodla
+                        // wskazuje obecnie rozpatrywany wezel
                         crafted = push(tmp->point, (ptr->length + tmp->value));
                         crafted->prev = ptr;
                     }
@@ -135,14 +147,19 @@ double dijkstra(int s, int b, int x, int y){
         curr = (ptr->number);
 
     }
-
+    // jesli szukamy najkrotzej sciezki miedzy dwoma wezlami i algorytm bfs wykazal, 
+    // ze przynajmniej jedna taka sciezka istnieje, to ta metoda zwraca jej dlugosc
     dist = is_listed(b)->length;
     printf("Najkrotsza sciezka miedzy punktami \"%d\" i \"%d\" ma dlugosc: %lf\n", s, b, dist);
+    clear_list();
     return dist;
 }
 
 ///////////////////////////// METODY /////////////////////////////
 
+// funkcja pozwalajaca sprawdzic czy w liscie znajduje sie wezel o wskazanym numerze
+// funkcja zaczyna sprawdzanie od poczatku listy zawierajacej zarowno wezly rozpatrzone, 
+// jak i te ktore zamierzamy jeszcze rozpatrzyc
 box_2 *is_listed(int nb)
 {
     if(first_l_2!=NULL)
@@ -159,7 +176,8 @@ box_2 *is_listed(int nb)
     return 0;
 }
 
-// metoda do tworzenia nowego elementu kolejki
+// funkcja do tworzenia nowego elementu kolejki
+// uzywana w metodzie push
 box_2* new_box(int number, double length)
 {
     box_2* tmp = (box_2*)malloc(sizeof(box_2));
@@ -171,11 +189,21 @@ box_2* new_box(int number, double length)
     return tmp;
 }
 
+// metoda oczyszczajaca pamiec po algorytmie Dijkstry
+void clear_list(){
+    while(first_l_2!=NULL){
+        element_destroy();
+    }
+    first_l = NULL;
+    first_l_2 = NULL;
+}
+
 // metoda calkowicie oczyszczajaca pamiec po elemencie
-void clear()
+// wywolywana przez metode clear_list()
+void element_destroy()
 {
-    box_2* tmp = first_l;
-    first_l = first_l->next;
+    box_2* tmp = first_l_2;
+    first_l_2 = first_l_2->next;
     free(tmp);
 }
 
@@ -187,7 +215,8 @@ void pop()
     first_l = first_l->next;
 }
 
-// metoda dodajaca element do listy z uwzglednieniem jego priorytetu
+// funkcja dodajaca element do listy z uwzglednieniem jego priorytetu
+// zwraca wskaznik na wlasnie dodany wezel
 box_2 *push(int number, double length)
 {
     box_2* start = first_l;

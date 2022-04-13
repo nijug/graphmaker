@@ -1,19 +1,11 @@
+#include <stdio.h>
+#include "graph.h"
 #include "bfs.h"
 
 struct box *first = NULL;
 struct box *last = NULL;
 struct box *first_2 = NULL;
 struct box *last_2 = NULL;
-
-void enqueue(int number);
-void dequeue();
-int in_queue(int number);
-int queue_size();
-void enqueue_curr(int number);
-void dequeue_curr();
-int in_queue_curr(int number);
-void clear_queue();
-void clear_queue_curr();
 
 // dla roznych a i b zwraca 1 istnieje sciezka miedzy nimi albo 0 jesli nie istnieje
 // dla tych samych a i b zwraca 1 jesli caly graf jest spojny oraz 0 jesli jest nie spojny
@@ -31,7 +23,8 @@ int bfs(int a, int b, int x, int y){
 
             if(i!=0){ // gorny
                 if(tmp->value!=-1.0)
-                // jesli dany numer wezla nie pojawil sie jeszcze w kolejce rozpatrzonych oraz w kolejce do rozpatrzenia
+                // jesli dany numer wezla nie pojawil sie jeszcze w liscie rozpatrzonych oraz w liscie do rozpatrzenia
+                // to zostaje on dodany do listy wezlow do rozpatrzenia
                     if(in_queue(tmp->point)!=1&&in_queue_curr(tmp->point)!=1)
                         enqueue_curr(tmp->point);
                 tmp = tmp->next;
@@ -63,7 +56,8 @@ int bfs(int a, int b, int x, int y){
         // usuniecie obecnego wezla z kolejki do rozpatrzenia
         dequeue_curr(curr);
 
-        // gdy kolejka do rozpotrzenia jest pusta (wszystkie dostepne wezly zostaly rozpatrzone)
+        // sytuacja, gdy kolejka do rozpotrzenia jest pusta 
+        // (wszystkie dostepne wezly zostaly rozpatrzone)
         if(first_2 == NULL)
         {
             // sytuacja, gdy sprawdzamy spojnosc calego grafu
@@ -84,7 +78,8 @@ int bfs(int a, int b, int x, int y){
                     return 3;
                 }
             }
-            // sytuacja, gdy sprawdzamy tylko czy istnieje sciezka miedzy dwoma konkretnymi wezlami
+            // sytuacja, gdy sprawdzamy tylko czy istnieje 
+            // sciezka miedzy dwoma konkretnymi wezlami
             else
             {
                 if(found == 0)
@@ -101,8 +96,6 @@ int bfs(int a, int b, int x, int y){
         curr = (first_2->nb);
 
     }
-    //*//                
-    //return 1;
 }
 
 ///////////////////////////// METODY /////////////////////////////
@@ -121,7 +114,7 @@ void enqueue(int number){
         last = last->next;
     }
 }
-// metoda do usuniecia numeru wezla do kolejki
+// metoda do usuniecia wezla z listy wezlow rozpatrzonych
 void dequeue(){
     if(first != NULL){
         struct box *tmp;
@@ -149,7 +142,7 @@ int in_queue(int number){
     return 0;    
 }
 
-// zwraca ilosc wezlow w liscie
+// zwraca ilosc wezlow w liscie wezlow do rozpatrzenia
 int queue_size(){
     int size = 0;
     struct box *tmp;
@@ -166,7 +159,7 @@ int queue_size(){
     return size;    
 }
 
-// metoda do dodania numeru wezla do kolejki
+// metoda do dodania wezla do listy wezlow do rozpatrzenia
 void enqueue_curr(int number){
     struct box *rb = malloc(sizeof(struct box));
     rb->nb = number;
@@ -181,7 +174,7 @@ void enqueue_curr(int number){
     }
 }
 
-// metoda do usuniecia numeru wezla do kolejki
+// metoda do usuniecia wezla z listy wezlow do rozpatrzenia
 void dequeue_curr(){
     if(first_2 != NULL){
         struct box *tmp;
