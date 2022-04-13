@@ -83,5 +83,5 @@ int is_empty(box_2** head)
 }
 
 void initialize_length(){
-    //queue_size();
+    queue_size();
 }
