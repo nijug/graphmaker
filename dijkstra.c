@@ -41,7 +41,7 @@ double dijkstra(int s, int b, int x, int y){
 
     // petla powtarza sie tyle razy ile wezlow bfs znalazl w tej czesci grafu
     for(k = 0; k < size; k++){
-        i = curr / x;
+        i = curr / y;
         j = curr % y;
         tmp = graph[curr];
         if(tmp != NULL){

@@ -16,7 +16,7 @@ int bfs(int a, int b, int x, int y){
     node *tmp;
     while(first_2!=0){
         if(curr == b) found = 1;
-        i = curr / x;
+        i = curr / y;
         j = curr % y;
         tmp = graph[curr];
         if(tmp != NULL){

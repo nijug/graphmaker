@@ -6,7 +6,6 @@
 // narazie dałem standardowe mniejsze niż w funkcjonalnej żeby było łatwiej debuggować, potem do zmiany
 int main(int argc, char** argv)
 {
-    //dijkstra(1, 1, 1, 1);
     
     srandom(time(NULL));
     int opt;
@@ -117,10 +116,6 @@ int main(int argc, char** argv)
 
         read_graph(fname,&x,&y);
         // tutaj wywołanie ścieżek grafu i zapisania ścieżki do pliku
-        /*printf("Spojnosc calego grafu: %d\n", bfs(0, 0, 4, 4));
-        printf("Trasa z 0 do 3: %d\n", bfs(0, 3, 4, 4));
-        printf("Trasa z 0 do 3: %d\n", bfs(0, 3, 4, 4));
-        printf("Trasa z 0 do 13: %d\n", bfs(0, 13, 4, 4));*/
 
         dijkstra(k[0], k[1], x, y);
 
@@ -134,11 +129,12 @@ int main(int argc, char** argv)
        }
        else
        {
-           generate(x, y, r1, r2);
-           if (k>0)
-               // tu funkcja do dzielenia
-           write_graph(fname, x, y,1);
-           graphfree(x,y);
+            generate(x, y, r1, r2);
+            if (k>0)
+                // tu funkcja do dzielenia
+            write_graph(fname, x, y,1);
+            dijkstra(k[0], k[1], x, y);
+            graphfree(x,y);
        }
     }
 //printf("%d",max_mem());
