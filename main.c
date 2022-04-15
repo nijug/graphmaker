@@ -122,7 +122,7 @@ int main(int argc, char** argv)
         printf("Trasa z 0 do 3: %d\n", bfs(0, 3, 4, 4));
         printf("Trasa z 0 do 13: %d\n", bfs(0, 13, 4, 4));*/
 
-        dijkstra(0, 3, 4, 4);
+        dijkstra(k[0], k[1], x, y);
 
         graphfree(x,y);
     }

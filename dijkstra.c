@@ -151,6 +151,7 @@ double dijkstra(int s, int b, int x, int y){
     // ze przynajmniej jedna taka sciezka istnieje, to ta metoda zwraca jej dlugosc
     dist = is_listed(b)->length;
     printf("Najkrotsza sciezka miedzy punktami \"%d\" i \"%d\" ma dlugosc: %lf\n", s, b, dist);
+    show_path(b);
     clear_list();
     return dist;
 }
@@ -251,4 +252,17 @@ box_2 *push(int number, double length)
     }
     return tmp;
      
+}
+
+void show_path(int tg){
+    struct box_2 *tmp;
+    tmp = is_listed(tg);
+    if(tmp != 0){
+        do{
+            printf("%d -> ", tmp->number);
+            if((tmp->prev !=NULL)&&(tmp->prev->number != tmp->number))
+                tmp = tmp->prev;
+        }while((tmp->prev != NULL)&&(tmp->prev->number != tmp->number));
+    }
+    printf("%d\n", tmp->number);
 }

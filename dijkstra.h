@@ -18,3 +18,4 @@ box_2 *push(int number, double length);
 void clear_list();
 void element_destroy();
 box_2 *is_listed(int nb);
+void show_path(int tg);
