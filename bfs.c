@@ -25,28 +25,28 @@ int bfs(int a, int b, int x, int y){
                 if(tmp->value!=-1.0)
                 // jesli dany numer wezla nie pojawil sie jeszcze w liscie rozpatrzonych oraz w liscie do rozpatrzenia
                 // to zostaje on dodany do listy wezlow do rozpatrzenia
-                    if(in_queue(tmp->point)!=1&&in_queue_curr(tmp->point)!=1)
+                    if(in_queue(tmp->point)!=1)
                         enqueue_curr(tmp->point);
                 tmp = tmp->next;
             }
 
             if(j+1!=y){ // lewy
                 if(tmp->value!=-1.0)
-                    if(in_queue(tmp->point)!=1&&in_queue_curr(tmp->point)!=1)
+                    if(in_queue(tmp->point)!=1)
                         enqueue_curr(tmp->point);
                 tmp = tmp->next;
             }
 
             if(j!=0){ // prawy
                 if(tmp->value!=-1.0)
-                    if(in_queue(tmp->point)!=1&&in_queue_curr(tmp->point)!=1)
+                    if(in_queue(tmp->point)!=1)
                         enqueue_curr(tmp->point);
                 tmp = tmp->next;
             }
 
             if(i+1!=x){ //dolny
                 if(tmp->value!=-1.0)
-                    if(in_queue(tmp->point)!=1&&in_queue_curr(tmp->point)!=1)
+                    if(in_queue(tmp->point)!=1)
                         enqueue_curr(tmp->point);
             }
         }
@@ -178,24 +178,6 @@ void dequeue_curr(){
             last = last->next;
         }
     }
-}
-
-// sprawdza czy dany numer wezla jest juz w kolejce
-// zwraca 1 gdy jest i 0 gdy nie ma
-int in_queue_curr(int number){
-    struct box *tmp;
-    tmp = first_2;
-    if(first_2 != NULL){
-        do{
-            if(tmp->nb == number)
-                return 1;
-            if(tmp->next!=NULL)
-                tmp = tmp->next;
-        }while(tmp->next!= NULL);
-        if(tmp->nb == number)
-            return 1;
-    }
-    return 0;    
 }
 
 // metoda do czyszczaca pamiec i resetujaca kolejke
