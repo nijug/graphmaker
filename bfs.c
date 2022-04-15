@@ -52,7 +52,6 @@ int bfs(int a, int b, int x, int y){
         }
         
         // zapisanie obecnego wezla do kolejki rozpatrzonych
-        enqueue(curr);
         // usuniecie obecnego wezla z kolejki do rozpatrzenia
         dequeue_curr(curr);
 
@@ -65,14 +64,14 @@ int bfs(int a, int b, int x, int y){
             {
                 if(queue_size() == (x*y)) 
                 {
-                    clear_queue_curr();
+                    //clear_queue_curr();
                     clear_queue();
                     printf("Graf jest spojny.\n");
                     return 2;
                 }
                 else 
                 {
-                    clear_queue_curr();
+                    //clear_queue_curr();
                     clear_queue();  
                     printf("Graf nie jest spojny.\n");
                     return 3;
@@ -84,7 +83,7 @@ int bfs(int a, int b, int x, int y){
             {
                 if(found == 0)
                 {
-                    clear_queue_curr();
+                    //clear_queue_curr();
                     clear_queue();  
                     printf("Sciezka miedzy wybranymi wezlami nie istnieje!\n");
                 }
@@ -100,20 +99,6 @@ int bfs(int a, int b, int x, int y){
 
 ///////////////////////////// METODY /////////////////////////////
 
-// metoda do dodania numeru wezla do kolejki
-void enqueue(int number){
-    struct box *rb = malloc(sizeof(struct box));
-    rb->nb = number;
-    rb->next = NULL;
-    if(last == NULL){
-        first = rb;
-        last = rb;
-    }
-    else{
-        last->next = rb;
-        last = last->next;
-    }
-}
 // metoda do usuniecia wezla z listy wezlow rozpatrzonych
 void dequeue(){
     if(first != NULL){
@@ -176,11 +161,22 @@ void enqueue_curr(int number){
 
 // metoda do usuniecia wezla z listy wezlow do rozpatrzenia
 void dequeue_curr(){
-    if(first_2 != NULL){
+    if(first_2 != NULL)
+    {
         struct box *tmp;
         tmp = first_2;
         first_2 = first_2->next;
-        free(tmp);
+        
+        if(last == NULL)
+        {
+            first = tmp;
+            last = tmp;
+        }
+        else
+        {
+            last->next = tmp;
+            last = last->next;
+        }
     }
 }
 
@@ -209,13 +205,6 @@ void clear_queue(){
     }
     first = NULL;
     last = NULL;
-}
-
-// metoda czyszczaca pamiec i resetujaca kolejke
-void clear_queue_curr(){
-    while(first_2!=NULL){
-        dequeue_curr();
-    }
     first_2 = NULL;
     last_2 = NULL;
 }

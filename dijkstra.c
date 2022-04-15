@@ -18,7 +18,7 @@ double dijkstra(int s, int b, int x, int y){
 
         case 1:
             size = queue_size();
-            clear_queue_curr();
+            //clear_queue_curr();
             clear_queue();        
             break;
 
