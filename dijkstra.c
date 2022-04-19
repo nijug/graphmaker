@@ -1,9 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "dijkstra.h"
 #include "graph.h"
 #include "bfs.h"
-#include "dijkstra.h"
-
 struct box_2 *first_l = NULL;
 struct box_2 *first_l_2 = NULL;
 

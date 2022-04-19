@@ -1,12 +1,11 @@
+#include "utilities.h"
 #include "graph.h"
 #include "bfs.h"
 #include "dijkstra.h"
-#include "utilities.h"
-
 // narazie dałem standardowe mniejsze niż w funkcjonalnej żeby było łatwiej debuggować, potem do zmiany
 int main(int argc, char** argv)
 {
-    
+
     srandom(time(NULL));
     int opt;
     char *fname="graf.txt";
@@ -90,52 +89,64 @@ int main(int argc, char** argv)
         }
     }
 
-    if (x*y>max_mem())
-    {
-        fprintf (stderr,"Iloczyn argumentow x i y przekroczyl dopuszczalna wartosc maksymalna : %d !\n",max_mem());
-        exit (EXIT_FAILURE);
-    }
-
-    if (x*y<n)
-    {
-        fprintf (stderr,"Argument n nie może być większy od iloczynu x*y!\n");
-        exit (EXIT_FAILURE);
-    }
-
-    for (int i =0 ; i<kSize; i++)
-    {
-        if (k[i]>x*y)
-        {
-            fprintf (stderr,"Numery wezlow nie moga być większe od ilosci wszystkich wezlow w grafie (iloczynu argumentow x i y)!\n");
-            exit (EXIT_FAILURE);
-        }
-    }
 
     if( access( fname, F_OK ) == 0 )
     {
 
         read_graph(fname,&x,&y);
-        // tutaj wywołanie ścieżek grafu i zapisania ścieżki do pliku
+        bfs(0,0,x,y);
+        Twrite_graph(x,y);
+        for (int i =0 ; i<kSize; i++)
+        {
+            if (k[i]>=x*y)
+            {
+                fprintf (stderr,"Numery wezlow nie moga być większe od ilosci wszystkich wezlow w grafie (iloczynu argumentow x i y)!\n");
+                exit (EXIT_FAILURE);
+            }
+        }
+        if(kSize==0)
+            dijkstra(k[0], k[1], x, y);
+        else
+        {
 
-        dijkstra(k[0], k[1], x, y);
+            for (int i=0; i<kSize-1; i++)
+            {
+                for (int j=i+1; j<kSize; j++)
+                {
+                    dijkstra(k[i], k[j], x, y);
+                }
+            }
+        }
 
         graphfree(x,y);
     }
-   else
+    else
     {
-       if ( x*y==1 || n == x*y )
-       {
-           write_graph(fname,x,y,0);
-       }
-       else
-       {
+        if ( x*y==1 || n == x*y )
+        {
+            write_graph(fname,x,y,0);
+        }
+
+        if (x*y>max_mem())
+        {
+            fprintf (stderr,"Iloczyn argumentow x i y przekroczyl dopuszczalna wartosc maksymalna : %d !\n",max_mem());
+            exit (EXIT_FAILURE);
+        }
+
+        if (x*y<n)
+        {
+            fprintf (stderr,"Argument n nie może być większy od iloczynu x*y!\n");
+            exit (EXIT_FAILURE);
+        }
+
+        else
+        {
             generate(x, y, r1, r2);
-            if (k>0)
-                // tu funkcja do dzielenia
+            if (n>1);
+                divider(x-1,y-1,n);
             write_graph(fname, x, y,1);
-            dijkstra(k[0], k[1], x, y);
             graphfree(x,y);
-       }
+        }
     }
 //printf("%d",max_mem());
 
@@ -149,10 +160,11 @@ int main(int argc, char** argv)
     }
 
     printf("\n");
-do testowania 
+do testowania
 
 */
     fprintf (stdout,"Program zakończono pomyślnie\n");
     exit (EXIT_SUCCESS);
-
+// w dijkstrze zapisywanie ścieżki do pliku
+// przy wygenrowanie takiego grafu: ./a.out -f graf2 -x 10 -y 10 -k 0 5 7 8 99 i potem szukaniu ścieżki, dijkstra wywala seg fault dla sciezki 0-99
 }

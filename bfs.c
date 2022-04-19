@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include "graph.h"
 #include "bfs.h"
-
+#include "graph.h"
 struct box *first = NULL;
 struct box *last = NULL;
 struct box *first_2 = NULL;
@@ -85,7 +83,7 @@ int bfs(int a, int b, int x, int y){
                 {
                     //clear_queue_curr();
                     clear_queue();  
-                    printf("Sciezka miedzy wybranymi wezlami nie istnieje!\n");
+                    printf("Sciezka miedzy wezlami %d i %d nie istnieje!\n",a,b);
                 }
                 return found;
             }
