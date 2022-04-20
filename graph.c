@@ -33,6 +33,9 @@ int v_count(node *l,double value) // zlicza ilośc value w węźle
         count++;
     return count;
 }
+
+// usuwa wezel poprzez zamiane wartosci wszystkich jego krawedzi na -2.0
+// wezel moze nie posiadac zadnych krawedzi, ale dalej istniec
 void obliterate(node *l) // ustawia value wszystkich krawędzi wezła na -2.0
 {
     node *tmp=l;
@@ -262,29 +265,176 @@ void read_graph(char *fname, int *x, int *y)
 
 void divider(int x, int y, int n)
 {
+    int a, current;
     Fgenerate(x,y);
-    obliterate((Fgraph[0]));
-    delete(Fgraph[1],0,-2.0);
-    delete(Fgraph[2],0,-2.0);
-    fprintf(stdout,"%d %d\n",x,y);
-    for (int i = 0; i < x; i++)
-    {
-        for (int j = 0; j < y; j++)
-        {
-            fprintf(stdout,"%d: \n", i * y + j);
-            node *tmp = Fgraph[i * y + j];
-            while (tmp != NULL)
-            {
-                fprintf(stdout,"%d %f \n", tmp->point, tmp->value);
-                tmp = tmp->next;
-            }
-            printf("\n");
-        }
-    }
+    for(int l = 0; l < n; l++){
+        do{
+            a = rand_i(0, x * y - 1);
+        }while(first_edgy(a, y) != 1);
+        
+        current = a;
+        
+        do{
+            // dodaje wezel do listy oznaczajacej sciezke, 
+            // po ktorej graf bedzie dzielony
+            add_to_path(current);
 
-    printf("%d\n",v_count(Fgraph[0],-2.0));
-    printf("%d\n",v_count(Fgraph[1],-2.0));
+            // losowe wyznaczanie kierunku
+            // w prawo, w innym wypadku w dol albo w gore
+            if(rand_bool() == 1){
+                if(valid(current + 1, x, y)==1)
+                    current++;
+            }
+            else{
+                if((rand_bool() == 1)||(valid(current - y, x, y)==1))
+                    current -= y;
+                
+                else if(valid(current + y, x, y)==1){
+                    current += y;
+                }
+            }
+        }while(edgy(current, x, y) == 0);
+        
+        cut_graph();
+
+        obliterate((Fgraph[0]));
+        delete(Fgraph[1],0,-2.0);
+        delete(Fgraph[2],0,-2.0);
+        fprintf(stdout,"%d %d\n",x,y);
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < y; j++)
+            {
+                fprintf(stdout,"%d: \n", i * y + j);
+                node *tmp = Fgraph[i * y + j];
+                while (tmp != NULL)
+                {
+                    fprintf(stdout,"%d %f \n", tmp->point, tmp->value);
+                    tmp = tmp->next;
+                }
+                printf("\n");
+            }
+        }
+
+        printf("%d\n",v_count(Fgraph[0],-2.0));
+        printf("%d\n",v_count(Fgraph[1],-2.0));
+    }
     Fgraphfree(x,y);
 
 return;
 }
+
+// sprawdza czy wezel jest na krawedzi, 
+// badz ktoras z krawedzi "nie istnieje"
+// wtedy zwraca 1
+// w przeciwnym wypadku zwraca 0
+// (gdy ma wszystkie cztery krawedzie)
+int edgy(int a, int x, int y){
+    node *tmp = graph[a];
+    // sprawdzenie czy wezel istnieje w ogole
+    if(tmp->value == -2.0)
+        return 0;
+    int i = a / y;
+    int j = a % y;
+
+    if(i!=0){ // gorny
+        if(tmp->value==-1.0)
+            return 1;
+        tmp = tmp->next;
+    }
+    else return 1;
+
+    if(j+1!=y){ // lewy
+        if(tmp->value==-1.0)
+            return 1;
+        tmp = tmp->next;
+    }
+    else return 1;
+
+    if(j!=0){ // prawy
+        if(tmp->value==-1.0)
+            return 1;
+        tmp = tmp->next;
+    }
+    else return 1;
+
+    if(i+1!=x){ //dolny
+        if(tmp->value==-1.0)
+            return 1;
+    }
+    else return 1;
+
+    return 0;
+}
+
+// specjalny wariant dla pierwszego znaku
+int first_edgy(int a, int y){
+    node *tmp = graph[a];
+    // sprawdzenie czy wezel istnieje w ogole
+    if(tmp->value == -2.0)
+        return 0;
+    int i = a / y;
+    int j = a % y;
+    if(i!=0){ // gorny
+        tmp = tmp->next;
+    }
+
+    if(j!=0){ // lewy
+        if(tmp->value==-1.0)
+            return 1;
+        tmp = tmp->next;
+    }
+    else return 1;
+
+    return 0;
+}
+
+// metoda dodajaca numer wezla do listy (sciezki)
+void add_to_path(int a){
+
+}
+
+
+
+// funkcja sprawdzajaca, czy dany wezel moze zostac
+// dodany do sciezki (znajduje sie w zakresie numerow wezlow)
+// raz nie zostal dodany tam juz wczesniej
+int valid(int a, int x, int y){
+    if((a<0)||(a>x*y-1))
+        return 0;
+    node *tmp = graph[a];
+    if(tmp->value -= -2.0)
+        return 0;
+    //if(is_in_path(a)!=NULL)
+    //    return 0;
+    return 1;
+}
+
+// funkcja tnaca graf, na podstawie danych o 
+// wezlach znajdujacych sie w liscie
+void cut_graph(){
+
+}
+
+////////////////////////// metody do listy
+
+
+// funkcja zwraca 1, gdy znajdzie wezel w liscie
+// oraz 0, gdy go nie znajdzie
+/*lista_c *is_in_path(int nb)
+{
+    
+    if(first_c!=NULL)
+    {
+        lista_c *tmp = first_c;
+        while(tmp->next!=NULL)
+        {
+            if (tmp->number == nb)
+                return tmp;
+            tmp = tmp->next;
+        }
+        if (tmp->number == nb)
+            return tmp;
+    }
+    return 0;
+}*/

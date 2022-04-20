@@ -95,7 +95,7 @@ int main(int argc, char** argv)
 
         read_graph(fname,&x,&y);
         bfs(0,0,x,y);
-        Twrite_graph(x,y);
+        //Twrite_graph(x,y);
         for (int i =0 ; i<kSize; i++)
         {
             if (k[i]>=x*y)
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
         else
         {
             generate(x, y, r1, r2);
-            if (n>1);
+            if (n>1)
                 divider(x-1,y-1,n);
             write_graph(fname, x, y,1);
             graphfree(x,y);

@@ -13,6 +13,11 @@ int rand_bool()
      return a+(b-a)*temp;
  }
 
+ int rand_i(int a, int b)
+ {
+     return rand() % (b-a+1) + a;
+ }
+
 int is_int(char number[], int zero) // int po to żeby wywalić warunek że nie może być zerem - tylko dla sprawdzania k
 {
 
