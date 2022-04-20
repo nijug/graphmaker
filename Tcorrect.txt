@@ -1,0 +1,8 @@
+Graf jest spojny.
+Najkrotsza sciezka miedzy punktami "1" i "9" ma dlugosc: 0.896387
+9 -> 5 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "11" ma dlugosc: 0.926249
+11 -> 10 -> 6 -> 5 -> 1
+Najkrotsza sciezka miedzy punktami "9" i "11" ma dlugosc: 0.942866
+11 -> 10 -> 6 -> 5 -> 9
+Program zakończono pomyślnie

@@ -243,8 +243,8 @@ void read_graph(char *fname, int *x, int *y)
 
 
         read = sscanf(line, "%d %lf %d %lf %d %lf %d %lf ",&points[0], &values[0],&points[1], &values[1],&points[2], &values[2],&points[3], &values[3]);
-        if (read/2==0)
-            graph[i]=NULL;
+        graph[i]=NULL;
+        if (read/2==0);
         else if (read/2>0)
         {
             for (int j = 0; j < read / 2; j++)

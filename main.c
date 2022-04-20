@@ -2,7 +2,6 @@
 #include "graph.h"
 #include "bfs.h"
 #include "dijkstra.h"
-// narazie dałem standardowe mniejsze niż w funkcjonalnej żeby było łatwiej debuggować, potem do zmiany
 int main(int argc, char** argv)
 {
 
@@ -95,7 +94,6 @@ int main(int argc, char** argv)
 
         read_graph(fname,&x,&y);
         bfs(0,0,x,y);
-        Twrite_graph(x,y);
         for (int i =0 ; i<kSize; i++)
         {
             if (k[i]>=x*y)
@@ -142,7 +140,7 @@ int main(int argc, char** argv)
         else
         {
             generate(x, y, r1, r2);
-            if (n>1);
+            if (n>1)
                 divider(x-1,y-1,n);
             write_graph(fname, x, y,1);
             graphfree(x,y);
@@ -150,21 +148,7 @@ int main(int argc, char** argv)
     }
 //printf("%d",max_mem());
 
-/*
-    printf("f:%s x:%d y:%d n:%d r1=%f r2=%f\n", fname, x,y,n,r1,r2);
-
-    for (int j = 0; j<kSize; j++)
-    {
-        printf("k:");
-        printf(" %d",k[j]);
-    }
-
-    printf("\n");
-do testowania
-
-*/
     fprintf (stdout,"Program zakończono pomyślnie\n");
     exit (EXIT_SUCCESS);
-// w dijkstrze zapisywanie ścieżki do pliku
-// przy wygenrowanie takiego grafu: ./a.out -f graf2 -x 10 -y 10 -k 0 5 7 8 99 i potem szukaniu ścieżki, dijkstra wywala seg fault dla sciezki 0-99
+
 }

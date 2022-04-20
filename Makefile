@@ -9,7 +9,20 @@ utilities.o: utilities.h
 
 
 
-.PHONY: clean
+.PHONY: clean test1 test2 test3 test
 
 clean:
 		-rm *.o a.out
+test1:
+		@./a.out -f Tgraf.txt -k 1 9 11 > output.txt
+		@diff output.txt Tcorrect.txt
+test2:
+		@./a.out ./a.out -f Tgraf2.txt -k 0 999 848 56 178 > output.txt
+		@diff output.txt Tcorrect2.txt
+test3:
+		@./a.out -f Tgraf3.txt -k 0 1 2 > output.txt
+		@diff output.txt Tcorrect3.txt
+
+test:	test1 test2 test3
+
+
