@@ -6,7 +6,6 @@ struct box_2 *first_l_2 = NULL;
 
 double dijkstra(int s, int b, int x, int y){
     int size, result = bfs(s, b, x, y);
-    
     switch (result)
     {
         case 0:
@@ -44,6 +43,7 @@ double dijkstra(int s, int b, int x, int y){
         if(tmp != NULL){
 
             if(i != 0){ // gorny - rozpatrywanie krawedzi idacej w gore
+
                 if(tmp->value != -1.0)
                 {
                     // sprawdzenie czy wskazywany wezel jest juz w liscie wezlow 
@@ -135,13 +135,16 @@ double dijkstra(int s, int b, int x, int y){
                 }
                 tmp = tmp->next;
             }
+            
         }
         
         pop(ptr);
         ptr = first_l;
+        printf("Curr: %d\n", curr);
 
         // zamiana numeru obecnego wezla na numer pierwszego wezla w kolejce do rozpatrzenia (priorytetowej)
-        curr = (ptr->number);
+        if(ptr!=NULL)
+            curr = (ptr->number);
 
     }
     // jesli szukamy najkrotzej sciezki miedzy dwoma wezlami i algorytm bfs wykazal, 
@@ -163,13 +166,14 @@ box_2 *is_listed(int nb)
     if(first_l_2!=NULL)
     {
         box_2 *tmp = first_l_2;
-        do
+        while(tmp->next!=NULL)
         {
             if (tmp->number == nb)
                 return tmp;
-            if(tmp->next!=NULL)
-                tmp = tmp->next;
-        }while(tmp->next!=NULL);
+            tmp = tmp->next;
+        }
+        if (tmp->number == nb)
+            return tmp;
     }
     return 0;
 }
