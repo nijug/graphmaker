@@ -91,7 +91,6 @@ int bfs(int a, int b, int x, int y){
 
         // zamiana numeru obecnego wezla na numer pierwszego wezla w kolejce do rozpatrzenia
         curr = (first_2->nb);
-
     }
 }
 

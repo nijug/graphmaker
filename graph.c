@@ -2,6 +2,10 @@
 
 node **graph;
 node **Fgraph;
+
+struct lista_c *first_c = NULL;
+struct lista_c *last_c = NULL;
+
 double find_value(node *l, int point)
 {
     node *tmp=l;
@@ -267,58 +271,69 @@ void divider(int x, int y, int n)
 {
     int a, current;
     Fgenerate(x,y);
-    for(int l = 0; l < n; l++){
+    for(int l = 1; l < n; l++)
+    {
         do{
             a = rand_i(0, x * y - 1);
-        }while(first_edgy(a, y) != 1);
+        }while(first_edgy(a, y) == 0);
         
         current = a;
-        
-        do{
-            // dodaje wezel do listy oznaczajacej sciezke, 
-            // po ktorej graf bedzie dzielony
-            add_to_path(current);
+        enqueue_c(current);
 
+        do{
             // losowe wyznaczanie kierunku
             // w prawo, w innym wypadku w dol albo w gore
-            if(rand_bool() == 1){
+            if(rand_bool() == 1)
+            {
+                //printf(valid(current + 1, x, y));
                 if(valid(current + 1, x, y)==1)
                     current++;
             }
-            else{
+            else
+            {
+                // w gore
                 if((rand_bool() == 1)||(valid(current - y, x, y)==1))
                     current -= y;
-                
-                else if(valid(current + y, x, y)==1){
+                // w dol
+                else if(valid(current + y, x, y)==1)
+                {
                     current += y;
                 }
             }
+
+            // dodaje wezel do listy oznaczajacej sciezke, 
+            // po ktorej graf bedzie dzielony
+            enqueue_c(current);
         }while(edgy(current, x, y) == 0);
         
-        cut_graph();
+        cut_graph(y, x);
+        clear_queue_c();
+        /*
+            obliterate((Fgraph[0]));
+            delete(Fgraph[1],0,-2.0);
+            delete(Fgraph[2],0,-2.0);
 
-        obliterate((Fgraph[0]));
-        delete(Fgraph[1],0,-2.0);
-        delete(Fgraph[2],0,-2.0);
-        fprintf(stdout,"%d %d\n",x,y);
-        for (int i = 0; i < x; i++)
-        {
-            for (int j = 0; j < y; j++)
+            fprintf(stdout,"%d %d\n",x,y);
+            for (int i = 0; i < x; i++)
             {
-                fprintf(stdout,"%d: \n", i * y + j);
-                node *tmp = Fgraph[i * y + j];
-                while (tmp != NULL)
+                for (int j = 0; j < y; j++)
                 {
-                    fprintf(stdout,"%d %f \n", tmp->point, tmp->value);
-                    tmp = tmp->next;
+                    fprintf(stdout,"%d: \n", i * y + j);
+                    node *tmp = Fgraph[i * y + j];
+                    while (tmp != NULL)
+                    {
+                        fprintf(stdout,"%d %f \n", tmp->point, tmp->value);
+                        tmp = tmp->next;
+                    }
+                    printf("\n");
                 }
-                printf("\n");
             }
-        }
 
-        printf("%d\n",v_count(Fgraph[0],-2.0));
-        printf("%d\n",v_count(Fgraph[1],-2.0));
+            printf("%d\n",v_count(Fgraph[0],-2.0));
+            printf("%d\n",v_count(Fgraph[1],-2.0));
+        */
     }
+
     Fgraphfree(x,y);
 
 return;
@@ -330,35 +345,42 @@ return;
 // w przeciwnym wypadku zwraca 0
 // (gdy ma wszystkie cztery krawedzie)
 int edgy(int a, int x, int y){
-    node *tmp = graph[a];
+    
+    // czy na pewno?
+    // moze potrzebny fgraph[a]
+    node *tmp = Fgraph[a];
     // sprawdzenie czy wezel istnieje w ogole
     if(tmp->value == -2.0)
         return 0;
     int i = a / y;
     int j = a % y;
 
-    if(i!=0){ // gorny
+    if(i!=0)
+    { // gorny
         if(tmp->value==-1.0)
             return 1;
         tmp = tmp->next;
     }
     else return 1;
 
-    if(j+1!=y){ // lewy
+    if(j+1!=y)
+    { // lewy
         if(tmp->value==-1.0)
             return 1;
         tmp = tmp->next;
     }
     else return 1;
 
-    if(j!=0){ // prawy
+    if(j!=0)
+    { // prawy
         if(tmp->value==-1.0)
             return 1;
         tmp = tmp->next;
     }
     else return 1;
 
-    if(i+1!=x){ //dolny
+    if(i+1!=x)
+    { //dolny
         if(tmp->value==-1.0)
             return 1;
     }
@@ -368,8 +390,9 @@ int edgy(int a, int x, int y){
 }
 
 // specjalny wariant dla pierwszego znaku
-int first_edgy(int a, int y){
-    node *tmp = graph[a];
+int first_edgy(int a, int y)
+{
+    node *tmp = Fgraph[a];
     // sprawdzenie czy wezel istnieje w ogole
     if(tmp->value == -2.0)
         return 0;
@@ -379,62 +402,242 @@ int first_edgy(int a, int y){
         tmp = tmp->next;
     }
 
+    // jesli po lewej ma usuniety graf
+    // to sie nadaje
     if(j!=0){ // lewy
         if(tmp->value==-1.0)
             return 1;
         tmp = tmp->next;
     }
+
+    // jesli przylega do lewej krawedzi grafu 
+    // to sie nadaje
     else return 1;
 
     return 0;
 }
 
-// metoda dodajaca numer wezla do listy (sciezki)
-void add_to_path(int a){
-
-}
-
-
-
 // funkcja sprawdzajaca, czy dany wezel moze zostac
 // dodany do sciezki (znajduje sie w zakresie numerow wezlow)
 // raz nie zostal dodany tam juz wczesniej
-int valid(int a, int x, int y){
-    if((a<0)||(a>x*y-1))
+int valid(int a, int x, int y)
+{
+    if((a<0)||(a>((x*y)-1)))
+    {
         return 0;
-    node *tmp = graph[a];
-    if(tmp->value -= -2.0)
+    }
+    node *tmp = Fgraph[a];
+
+    if(tmp->value == -2.0){
         return 0;
-    //if(is_in_path(a)!=NULL)
-    //    return 0;
+    }
+
+    if(in_queue_c(a)==1)
+    {
+        return 0;
+    }
     return 1;
 }
 
 // funkcja tnaca graf, na podstawie danych o 
 // wezlach znajdujacych sie w liscie
-void cut_graph(){
+void cut_graph(int y, int x)
+{
+    int cel, start, kierunek, i, j;
+    node *ftmp = NULL;
+    node *tmp = NULL;
+    node *tmp2 = NULL;
 
+    // if dla punktu a,
+    // zeby odciac jakas krawedz
+
+    while(first_c->next!=NULL)
+    {
+        start = first_c->value;
+        cel = first_c->next->value;
+        kierunek = cel - start;
+        i = start / y;
+        j = start % y;
+        ftmp = Fgraph[start];
+
+        if(kierunek == 1)
+        {
+            // oba zawsze maja krawedz w lewo
+            // tmp krawedz w dol
+            // tmp2 krawedz w gore
+            tmp = graph[start+1];
+            tmp2 = graph[start+y+2];
+            // wziecie pod uwage pozycji wezla
+            // aby odczytac pozycje krawedzi
+            if(i!=0){ // posiadanie krawedzi idacej w gore
+                tmp = tmp->next;
+            }
+
+            tmp2->value = -1.0;
+            tmp2 = tmp2->next;
+
+            if(j+1!=y){ // posiadanie krawedzi idacej w prawo
+                tmp = tmp->next;
+                tmp2 = tmp2->next;
+            }
+
+            //if(j!=0){ // posiadanie krawedzi idacej w lewo
+            tmp = tmp->next;
+            tmp2 = tmp2->next;
+            //}
+
+            tmp->value = -1.0;
+            /* zbedne w tym przypadku
+            if(i+1!=x){ //pozsiadanie krawedzi idacej w dol
+            }
+            */
+        }
+
+        else if(kierunek == y)
+        {
+            // oba zawsze maja krawedz w gore
+            // tmp krawedz w prawo
+            // tmp2 krawedz w lewo
+            tmp = graph[start+y+1];
+            tmp2 = graph[start+y+2];
+            // wziecie pod uwage pozycji wezla
+            // aby odczytac pozycje krawedzi
+            //if(i!=0){ // posiadanie krawedzi idacej w gore
+                tmp = tmp->next;
+                tmp2 = tmp->next;
+            //}
+
+            if(j+1!=y){ // posiadanie krawedzi idacej w prawo
+                tmp2 = tmp2->next;
+            }
+            tmp->value = -1.0;
+            tmp = tmp->next;
+
+            if(j!=0){ // posiadanie krawedzi idacej w lewo
+                tmp = tmp->next;
+            }
+            tmp2->value = -1.0;
+            tmp2 = tmp2->next;
+
+            /*if(i+1!=x){ //pozsiadanie krawedzi idacej w dol
+
+            }*/
+        }
+
+        else if(kierunek == (-1*y))
+        {
+            tmp = graph[start];
+            tmp2 = graph[start+1];
+            // oba zawsze maja krawedz w dol
+            // tmp krawedz w prawo
+            // tmp2 krawedz w lewo
+            tmp = graph[start+y+1];
+            tmp2 = graph[start+y+2];
+            // wziecie pod uwage pozycji wezla
+            // aby odczytac pozycje krawedzi
+            if(i!=0){ // posiadanie krawedzi idacej w gore
+                tmp = tmp->next;
+                tmp2 = tmp->next;
+            }
+
+            if(j+1!=y){ // posiadanie krawedzi idacej w prawo
+                tmp2 = tmp2->next;
+            }
+            tmp->value = -1.0;
+            tmp = tmp->next;
+
+            if(j!=0){ // posiadanie krawedzi idacej w lewo
+                tmp = tmp->next;
+            }
+            tmp2->value = -1.0;
+            tmp2 = tmp2->next;
+
+            /*if(i+1!=x){ //pozsiadanie krawedzi idacej w dol
+
+            }*/
+        }
+        obliterate(ftmp);
+        dequeue_c();            
+    }
 }
 
 ////////////////////////// metody do listy
 
-
-// funkcja zwraca 1, gdy znajdzie wezel w liscie
-// oraz 0, gdy go nie znajdzie
-/*lista_c *is_in_path(int nb)
+// metoda do usuniecia wezla z listy wezlow rozpatrzonych
+void dequeue_c()
 {
-    
-    if(first_c!=NULL)
+    if(first_c != NULL)
     {
-        lista_c *tmp = first_c;
-        while(tmp->next!=NULL)
-        {
-            if (tmp->number == nb)
-                return tmp;
-            tmp = tmp->next;
-        }
-        if (tmp->number == nb)
-            return tmp;
+        struct lista_c *tmp;
+        tmp = first_c;
+        first_c = first_c->next;
+        free(tmp);
     }
-    return 0;
-}*/
+}
+
+// sprawdza czy dany numer wezla jest juz w kolejce
+// zwraca 1 gdy jest i 0 gdy nie ma
+int in_queue_c(int val)
+{
+    struct lista_c *tmp;
+    tmp = first_c;
+    if(first_c != NULL)
+    {
+        do{
+            if(tmp->value == val)
+                return 1;
+            if(tmp->next!=NULL)
+                tmp = tmp->next;
+        }while(tmp->next!=NULL);
+        if(tmp->value == val)
+            return 1;
+    }
+    return 0;    
+}
+
+// zwraca ilosc wezlow w liscie wezlow do rozpatrzenia
+int queue_size_c()
+{
+    int size = 0;
+    struct lista_c *tmp;
+    tmp = first_c;
+    if(first_c != NULL)
+    {
+        do{
+            size++;
+            //printf("%d. Numer wezla %d\n", size, tmp->nb);
+            if(tmp->next!=NULL)
+                tmp = tmp->next;
+        }while(tmp->next!= NULL);
+        size++;
+    }
+    return size;    
+}
+
+// metoda do dodania wezla do listy wezlow do rozpatrzenia
+void enqueue_c(int val)
+{
+    struct lista_c *rb = malloc(sizeof(struct lista_c));
+    rb->value = val;
+    rb->next = NULL;
+    if(last_c == NULL)
+    {
+        first_c = rb;
+        last_c = rb;
+    }
+    else{
+        last_c->next = rb;
+        last_c = last_c->next;
+    }
+}
+
+// metoda do czyszczenia pamiec i resetujaca kolejke
+void clear_queue_c()
+{
+    while(first_c!=NULL)
+    {
+        dequeue_c();
+    }
+    first_c = NULL;
+    last_c = NULL;
+}

@@ -140,11 +140,14 @@ double dijkstra(int s, int b, int x, int y){
         
         pop(ptr);
         ptr = first_l;
-        printf("Curr: %d\n", curr);
 
         // zamiana numeru obecnego wezla na numer pierwszego wezla w kolejce do rozpatrzenia (priorytetowej)
         if(ptr!=NULL)
             curr = (ptr->number);
+        if(curr==b){
+            pop(ptr);
+            break;
+        }
 
     }
     // jesli szukamy najkrotzej sciezki miedzy dwoma wezlami i algorytm bfs wykazal, 
