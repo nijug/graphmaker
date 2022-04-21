@@ -38,5 +38,5 @@ int is_int(char number[], int zero) // int po to żeby wywalić warunek że nie 
 
 int max_mem()
 {
-     return (sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGESIZE) *0.3)/104;
+     return (sysconf(_SC_AVPHYS_PAGES) * sysconf(_SC_PAGESIZE) *0.3)/152;
 }
