@@ -14,14 +14,14 @@ utilities.o: utilities.h
 clean:
 		-rm *.o a.out
 test1:
-		@./a.out -f Tgraf.txt -k 1 9 11 > output.txt
-		@diff output.txt Tcorrect.txt
+		@./a.out -f tests/Tgraf.txt -k 1 9 11 > tests/output.txt
+		@diff tests/output.txt tests/Tcorrect.txt
 test2:
-		@./a.out ./a.out -f Tgraf2.txt -k 0 999 848 56 178 > output.txt
-		@diff output.txt Tcorrect2.txt
+		@ ./a.out -f tests/Tgraf2.txt -k 5 999 8 30 > tests/output.txt
+		@diff tests/output.txt tests/Tcorrect2.txt
 test3:
-		@./a.out -f Tgraf3.txt -k 0 1 2 > output.txt
-		@diff output.txt Tcorrect3.txt
+		@./a.out -f tests/Tgraf3.txt -k 0 1 2 3 4 5 6 7 8 > tests/output.txt
+		@diff tests/output.txt tests/Tcorrect3.txt
 
 test:	test1 test2 test3
 

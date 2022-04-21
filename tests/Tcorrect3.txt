@@ -1,0 +1,66 @@
+Graf nie jest spojny.
+Sciezka miedzy wezlami 0 i 1 nie istnieje!
+Sciezka miedzy wezlami 0 i 2 nie istnieje!
+Sciezka miedzy wezlami 0 i 3 nie istnieje!
+Sciezka miedzy wezlami 0 i 4 nie istnieje!
+Sciezka miedzy wezlami 0 i 5 nie istnieje!
+Sciezka miedzy wezlami 0 i 6 nie istnieje!
+Sciezka miedzy wezlami 0 i 7 nie istnieje!
+Sciezka miedzy wezlami 0 i 8 nie istnieje!
+Najkrotsza sciezka miedzy punktami "1" i "2" ma dlugosc: 0.003125
+2 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "3" ma dlugosc: 0.013832
+3 -> 4 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "4" ma dlugosc: 0.006485
+4 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "5" ma dlugosc: 0.008896
+5 -> 2 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "6" ma dlugosc: 0.020419
+6 -> 3 -> 4 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "7" ma dlugosc: 0.016193
+7 -> 4 -> 1
+Najkrotsza sciezka miedzy punktami "1" i "8" ma dlugosc: 0.012011
+8 -> 5 -> 2 -> 1
+Najkrotsza sciezka miedzy punktami "2" i "3" ma dlugosc: 0.016957
+3 -> 4 -> 1 -> 2
+Najkrotsza sciezka miedzy punktami "2" i "4" ma dlugosc: 0.009610
+4 -> 1 -> 2
+Najkrotsza sciezka miedzy punktami "2" i "5" ma dlugosc: 0.005771
+5 -> 2
+Najkrotsza sciezka miedzy punktami "2" i "6" ma dlugosc: 0.018610
+6 -> 7 -> 8 -> 5 -> 2
+Najkrotsza sciezka miedzy punktami "2" i "7" ma dlugosc: 0.013884
+7 -> 8 -> 5 -> 2
+Najkrotsza sciezka miedzy punktami "2" i "8" ma dlugosc: 0.008886
+8 -> 5 -> 2
+Najkrotsza sciezka miedzy punktami "3" i "4" ma dlugosc: 0.007347
+4 -> 3
+Najkrotsza sciezka miedzy punktami "3" i "5" ma dlugosc: 0.016583
+5 -> 4 -> 3
+Najkrotsza sciezka miedzy punktami "3" i "6" ma dlugosc: 0.006587
+6 -> 3
+Najkrotsza sciezka miedzy punktami "3" i "7" ma dlugosc: 0.011313
+7 -> 6 -> 3
+Najkrotsza sciezka miedzy punktami "3" i "8" ma dlugosc: 0.016311
+8 -> 7 -> 6 -> 3
+Najkrotsza sciezka miedzy punktami "4" i "5" ma dlugosc: 0.009236
+5 -> 4
+Najkrotsza sciezka miedzy punktami "4" i "6" ma dlugosc: 0.013934
+6 -> 3 -> 4
+Najkrotsza sciezka miedzy punktami "4" i "7" ma dlugosc: 0.009708
+7 -> 4
+Najkrotsza sciezka miedzy punktami "4" i "8" ma dlugosc: 0.012351
+8 -> 5 -> 4
+Najkrotsza sciezka miedzy punktami "5" i "6" ma dlugosc: 0.012839
+6 -> 7 -> 8 -> 5
+Najkrotsza sciezka miedzy punktami "5" i "7" ma dlugosc: 0.008113
+7 -> 8 -> 5
+Najkrotsza sciezka miedzy punktami "5" i "8" ma dlugosc: 0.003115
+8 -> 5
+Najkrotsza sciezka miedzy punktami "6" i "7" ma dlugosc: 0.004726
+7 -> 6
+Najkrotsza sciezka miedzy punktami "6" i "8" ma dlugosc: 0.009724
+8 -> 7 -> 6
+Najkrotsza sciezka miedzy punktami "7" i "8" ma dlugosc: 0.004998
+8 -> 7
+Program zakończono pomyślnie

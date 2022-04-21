@@ -1,3 +1,4 @@
+// Bernard Cesarz Mateusz Tkaczyk
 #include "utilities.h"
 #include "graph.h"
 #include "bfs.h"
@@ -93,7 +94,7 @@ int main(int argc, char** argv)
     {
 
         read_graph(fname,&x,&y);
-        bfs(0,0,x,y);
+	    bfs(0,0,x,y);
         for (int i =0 ; i<kSize; i++)
         {
             if (k[i]>=x*y)

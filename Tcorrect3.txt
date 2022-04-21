@@ -1,6 +1,0 @@
-Graf nie jest spojny.
-Sciezka miedzy wezlami 0 i 1 nie istnieje!
-Sciezka miedzy wezlami 0 i 2 nie istnieje!
-Najkrotsza sciezka miedzy punktami "1" i "2" ma dlugosc: 0.200775
-2 -> 1
-Program zakończono pomyślnie
