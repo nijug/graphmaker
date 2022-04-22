@@ -269,6 +269,21 @@ void read_graph(char *fname, int *x, int *y)
 
 void divider(int x, int y, int n)
 {
+    // metoda generuje podgraf, w ktorym wyznaczane sa losowe sciezki 
+    // zaczynajac od wezla przy "lewej scianie" (moze byc tez taka spowodowana dzieleniem), 
+    // i idac (wybierajac losowo jedno z trzech) w prawo, w gore albo w dol
+    // gdy ktorys z wezlow w sciezce dotrze do "sciany" w grafie (moze byc tez taka spowodowana dzieleniem)
+    // to funkcja przechodzi do dzielenia grafu po sciezce
+    // i usuwane sa najpierw krawedzie (oznaczane jako -1.0) w grafie, ktore przeciela sciezka
+    // a nastepnie "usuwane" sa wezly ze sciezki w podgrafie (usuwanie to zamiana 
+    // wartosci krawedzi tego wezla na -2.0, a wartosci krawedzi wezlow sasiadujacych 
+    // z nim i prowadzacych do niego na -1.0)
+
+    // niestety funkcjonalnosc dzielenia grafu nie jest w pelni gotowa
+    // dalej posiada bledy, ktore powoduja
+    // segmentation fault, a takze nie jest obsluzony przypadek, 
+    // gdy wszystkie wezly podgrafu zostaly juz usuniete 
+    // (trzeba by wtedy wylosowac jedna z krawedzi grafu i ja usunac)
     int a, current;
     Fgenerate(x,y);
     for(int l = 1; l < n; l++)
@@ -443,13 +458,39 @@ int valid(int a, int x, int y)
 // wezlach znajdujacych sie w liscie
 void cut_graph(int y, int x)
 {
-    int cel, start, kierunek, i, j;
+    int cel, start, kierunek, i, j, pos;
     node *ftmp = NULL;
     node *tmp = NULL;
     node *tmp2 = NULL;
-
+    i = first_c->value / y;
+    j = first_c->value % y;
+    pos = i * (x+1) + j;
+    
     // if dla punktu a,
     // zeby odciac jakas krawedz
+    if(first_c!=NULL)
+    {
+        tmp = graph[pos];
+        tmp2 = graph[pos+y+1];
+
+        if(i!=0)
+        { // posiadanie krawedzi idacej w gore
+            tmp = tmp->next;
+        }
+        tmp2->value = -1.0;
+
+        if(j+1!=y)
+        { // posiadanie krawedzi idacej w prawo
+            tmp = tmp->next;
+        }
+
+        if(j!=0){ // posiadanie krawedzi idacej w lewo
+            tmp = tmp->next;
+        }
+
+        tmp->value = -1.0;
+        kierunek = 1;
+    }
 
     while(first_c->next!=NULL)
     {
@@ -458,6 +499,7 @@ void cut_graph(int y, int x)
         kierunek = cel - start;
         i = start / y;
         j = start % y;
+        pos = i * (x+1) + j;
         ftmp = Fgraph[start];
 
         if(kierunek == 1)
@@ -465,8 +507,8 @@ void cut_graph(int y, int x)
             // oba zawsze maja krawedz w lewo
             // tmp krawedz w dol
             // tmp2 krawedz w gore
-            tmp = graph[start+1];
-            tmp2 = graph[start+y+2];
+            tmp = graph[pos+1];
+            tmp2 = graph[pos+y+2];
             // wziecie pod uwage pozycji wezla
             // aby odczytac pozycje krawedzi
             if(i!=0){ // posiadanie krawedzi idacej w gore
@@ -481,16 +523,11 @@ void cut_graph(int y, int x)
                 tmp2 = tmp2->next;
             }
 
-            //if(j!=0){ // posiadanie krawedzi idacej w lewo
             tmp = tmp->next;
             tmp2 = tmp2->next;
-            //}
 
             tmp->value = -1.0;
-            /* zbedne w tym przypadku
-            if(i+1!=x){ //pozsiadanie krawedzi idacej w dol
-            }
-            */
+            
         }
 
         else if(kierunek == y)
@@ -498,14 +535,11 @@ void cut_graph(int y, int x)
             // oba zawsze maja krawedz w gore
             // tmp krawedz w prawo
             // tmp2 krawedz w lewo
-            tmp = graph[start+y+1];
-            tmp2 = graph[start+y+2];
-            // wziecie pod uwage pozycji wezla
-            // aby odczytac pozycje krawedzi
-            //if(i!=0){ // posiadanie krawedzi idacej w gore
+            tmp = graph[pos+y+1];
+            tmp2 = graph[pos+y+2];
+            
                 tmp = tmp->next;
                 tmp2 = tmp->next;
-            //}
 
             if(j+1!=y){ // posiadanie krawedzi idacej w prawo
                 tmp2 = tmp2->next;
@@ -518,23 +552,12 @@ void cut_graph(int y, int x)
             }
             tmp2->value = -1.0;
             tmp2 = tmp2->next;
-
-            /*if(i+1!=x){ //pozsiadanie krawedzi idacej w dol
-
-            }*/
         }
 
         else if(kierunek == (-1*y))
         {
-            tmp = graph[start];
-            tmp2 = graph[start+1];
-            // oba zawsze maja krawedz w dol
-            // tmp krawedz w prawo
-            // tmp2 krawedz w lewo
-            tmp = graph[start+y+1];
-            tmp2 = graph[start+y+2];
-            // wziecie pod uwage pozycji wezla
-            // aby odczytac pozycje krawedzi
+            tmp = graph[pos];
+            tmp2 = graph[pos+1];
             if(i!=0){ // posiadanie krawedzi idacej w gore
                 tmp = tmp->next;
                 tmp2 = tmp->next;
@@ -551,14 +574,130 @@ void cut_graph(int y, int x)
             }
             tmp2->value = -1.0;
             tmp2 = tmp2->next;
-
-            /*if(i+1!=x){ //pozsiadanie krawedzi idacej w dol
-
-            }*/
         }
         obliterate(ftmp);
         dequeue_c();            
     }
+
+    // wycinanie krawedzi przez ostatni element sciezki
+    if(first_c!=NULL)
+    {
+        ftmp = Fgraph[start];
+        tmp = graph[pos];
+        tmp2 = graph[pos+y+1];
+
+        if((i==0)||((ftmp->value == -1.0)&&(kierunek!=y)))
+        { // usuwanie krawedzi nad wezlem
+            tmp = graph[pos];
+            tmp2 = graph[pos+1];
+            if(i!=0){ // posiadanie krawedzi idacej w gore
+                tmp = tmp->next;
+                tmp2 = tmp->next;
+            }
+
+            if(j+1!=y){ // posiadanie krawedzi idacej w prawo
+                tmp2 = tmp2->next;
+            }
+            tmp->value = -1.0;
+            tmp = tmp->next;
+
+            if(j!=0){ // posiadanie krawedzi idacej w lewo
+                tmp = tmp->next;
+            }
+            tmp2->value = -1.0;
+            tmp2 = tmp2->next;
+            obliterate(ftmp);
+            dequeue_c(); 
+            return;
+        }
+        tmp = tmp->next;
+        tmp2 = tmp2->next;
+
+        if((j+1==y)||(ftmp->value == -1.0))
+        { // usuwanie krawedzi na prawo od wezla
+            tmp = graph[pos+1];
+            tmp2 = graph[pos+y+2];
+            // wziecie pod uwage pozycji wezla
+            // aby odczytac pozycje krawedzi
+            if(i!=0){ // posiadanie krawedzi idacej w gore
+                tmp = tmp->next;
+            }
+
+            tmp2->value = -1.0;
+            tmp2 = tmp2->next;
+
+            if(j+1!=y){ // posiadanie krawedzi idacej w prawo
+                tmp = tmp->next;
+                tmp2 = tmp2->next;
+            }
+
+            tmp = tmp->next;
+            tmp2 = tmp2->next;
+
+            tmp->value = -1.0;
+
+            obliterate(ftmp);
+            dequeue_c(); 
+            return;
+        }
+        tmp = tmp->next;
+        tmp2 = tmp2->next;
+
+        if((j==0)||((ftmp->value == -1.0)&&(kierunek!=1)))
+        { // usuwanie krawedzi na lewo od wezla
+            tmp = graph[pos];
+            tmp2 = graph[pos+y+1];
+
+            if(i!=0)
+            { // posiadanie krawedzi idacej w gore
+                tmp = tmp->next;
+            }
+            tmp2->value = -1.0;
+
+            if(j+1!=y)
+            { // posiadanie krawedzi idacej w prawo
+                tmp = tmp->next;
+            }
+
+            if(j!=0){ // posiadanie krawedzi idacej w lewo
+                tmp = tmp->next;
+            }
+
+            tmp->value = -1.0;
+            kierunek = 1;
+            obliterate(ftmp);
+            dequeue_c(); 
+            return;
+
+        }
+        tmp = tmp->next;
+        tmp2 = tmp2->next;
+
+        if(j!=0)
+        {
+            tmp = graph[pos+y+1];
+            tmp2 = graph[pos+y+2];
+            
+                tmp = tmp->next;
+                tmp2 = tmp->next;
+
+            if(j+1!=y){ // posiadanie krawedzi idacej w prawo
+                tmp2 = tmp2->next;
+            }
+            tmp->value = -1.0;
+            tmp = tmp->next;
+
+            if(j!=0){ // posiadanie krawedzi idacej w lewo
+                tmp = tmp->next;
+            }
+            tmp2->value = -1.0;
+            tmp2 = tmp2->next;
+        }
+        obliterate(ftmp);
+        dequeue_c(); 
+        return;
+    }
+
 }
 
 ////////////////////////// metody do listy
